@@ -1,0 +1,4 @@
+rootProject.name = 'selenoid_selenide'
+
+include 'ui-tests'
+

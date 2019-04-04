@@ -1,0 +1,55 @@
+plugins {
+    id 'java'
+}
+
+ext {
+    allureSelenide = '2.9.0'
+    googleQuava = '26.0-jre'
+    lombokVersion = '1.18.6'
+    selenideVersion = '5.2.0'
+    slf4j = '1.7.25'
+    webdrivermanager = '3.2.0'
+    testDataSupplierVersion = '1.7.0'
+    testNGVersion = '6.13'
+}
+
+configurations {
+    agent
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+dependencies {
+
+    agent "org.aspectj:aspectjweaver:1.8.13"
+    compile "io.github.bonigarcia:webdrivermanager:$webdrivermanager"
+
+    compile "com.codeborne:selenide:$selenideVersion"
+    compile "org.testng:testng:$testNGVersion"
+
+    compile "org.testng:testng:$testNGVersion"
+    compile "io.github.sskorol:test-data-supplier:$testDataSupplierVersion"
+
+    compile "org.projectlombok:lombok:$lombokVersion"
+}
+
+[compileJava, compileTestJava]*.options*.compilerArgs = ['-parameters']
+
+test.doFirst {
+    jvmArgs "-javaagent:${configurations.agent.singleFile}"
+}
+
+test {
+    useTestNG() {
+        options {
+            listeners << "io.com.DataProviderListener"
+        }
+    }
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '5.1'
+}
