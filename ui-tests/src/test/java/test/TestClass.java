@@ -1,43 +1,28 @@
 package test;
 
-import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
-import com.core.provider.model.User;
-import io.github.sskorol.core.DataSupplier;
-import io.github.sskorol.data.YamlReader;
-import lombok.extern.slf4j.Slf4j;
-import one.util.streamex.StreamEx;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import test.utils.provider.BaseProvider;
 
-import java.lang.reflect.Method;
-
-import static io.github.sskorol.data.TestDataReader.use;
-
-@Slf4j
+@ExtendWith(BaseProvider.class)
+@SuppressWarnings("JavadocType")
 public class TestClass {
+    
+    private static final String BASE_URI = "/";
 
-    @Test(dataProvider = "getUsersData")
-    public void testName(final User user) {
-
-        Selenide.open("/");
-        log.info(user.getEmail());
-        log.info(user.getPassword());
+    @Test
+    public void testName() {
+        Selenide.open(BASE_URI);
     }
 
-    @DataSupplier
-    public StreamEx<User> getUsersData() {
-        Method method = null;
-        return use(YamlReader.class)
-                .withTarget(User.class)
-                .read()
-                .filter(u ->
-                        u.getRole().equals("ADMIN"));
+    @Test
+    public void test2() {
+        Selenide.open(BASE_URI);
     }
 
-    @BeforeMethod
-    public void setUp() {
-        Configuration.timeout = 6000;
-        Configuration.browser = "chrome";
+    @Test
+    public void test3() {
+        Selenide.open(BASE_URI);
     }
 }
