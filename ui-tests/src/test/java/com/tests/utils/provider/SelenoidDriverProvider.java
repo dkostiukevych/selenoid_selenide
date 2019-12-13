@@ -1,4 +1,4 @@
-package test.utils.provider;
+package com.tests.utils.provider;
 
 import com.codeborne.selenide.WebDriverProvider;
 import org.openqa.selenium.Dimension;
@@ -14,15 +14,18 @@ public class SelenoidDriverProvider implements WebDriverProvider {
     
     @Override
     public WebDriver createDriver(final DesiredCapabilities desiredCapabilities) {
+
+        final String wdHubUri = "http://localhost:4444/wd/hub";
         
         final DesiredCapabilities browserCapabilities = new DesiredCapabilities();
         browserCapabilities.setBrowserName("chrome");
-        browserCapabilities.setVersion("72");
+        browserCapabilities.setVersion("77");
         browserCapabilities.setCapability("enableVNC", true);
         
         try {
             final RemoteWebDriver driver = new RemoteWebDriver(
-                    URI.create("").toURL(), browserCapabilities
+                    URI.create(wdHubUri)
+                            .toURL(), browserCapabilities
             );
             driver.manage().window().setSize(new Dimension(1920, 1080));
             return driver;
