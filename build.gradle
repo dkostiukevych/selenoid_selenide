@@ -5,23 +5,26 @@ buildscript {
         }
     }
     dependencies {
-        classpath "io.franzbecker:gradle-lombok:1.14"
-        classpath "io.qameta.allure:allure-gradle:2.7.0"
+        classpath "io.qameta.allure:allure-gradle:2.8.1"
     }
 }
 
 
 ext {
-    junit_version = '5.4.0'
+    allure_version = "2.13.0"
+    junit_version = '5.5.2'
     junit_platform_version = '1.3.1'
+    harmcrest_version = '1.3'
 }
 
 subprojects {
 
     apply plugin: 'java'
     apply plugin: 'idea'
-    apply plugin: 'io.franzbecker.gradle-lombok'
     apply plugin: 'io.qameta.allure'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     repositories {
         jcenter()
@@ -35,9 +38,14 @@ subprojects {
 
     dependencies {
         compile (
+                "io.qameta.allure:allure-selenide:${allure_version}",
                 "org.junit.jupiter:junit-jupiter-api:$junit_version",
                 "org.junit.jupiter:junit-jupiter-engine:$junit_version",
                 "org.junit.platform:junit-platform-launcher:$junit_platform_version")
 
+        testCompile(
+                "io.qameta.allure:allure-junit5:${allure_version}",
+                "org.hamcrest:hamcrest-all:${harmcrest_version}"
+        )
     }
 }

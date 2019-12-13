@@ -1,33 +1,40 @@
 ext {
-    allure_selenide_version = '2.9.0'
-    lombok_version = '1.18.6'
-    selenide_version = '5.2.0'
+    allure_selenide_version = '2.0-BETA22'
+    selenide_version = '5.5.1'
+    test_containers_version = '1.12.4'
     webdrivermanager_version = '3.2.0'
 }
 dependencies {
     compile(
             "io.github.bonigarcia:webdrivermanager:$webdrivermanager_version",
-            "com.codeborne:selenide:$selenide_version")
-
-    annotationProcessor "org.projectlombok:lombok:$lombok_version"
+            "com.codeborne:selenide:$selenide_version",
+            "io.qameta.allure:allure-selenide:${allure_selenide_version}"
+    )
+    
+    testCompile(
+            "org.testcontainers:selenium:${test_containers_version}"
+    )
 }
 
 test {
+    useJUnitPlatform()
+}
 
-    doFirst {
-        jvmArgs "-javaagent:${configurations.agent.singleFile}"
-    }
+
+tasks.withType(Test) {
 
     useJUnitPlatform()
 
     systemProperties = [
-            'junit.jupiter.execution.parallel.enabled': true,
-            'junit.jupiter.execution.parallel.mode.default': 'concurrent',
-            'junit.jupiter.execution.parallel.mode.classes.default': 'concurrent'
-    ]
-}
+            'junit.jupiter.execution.parallel.enabled'             : true,
+            'junit.jupiter.execution.parallel.mode.default'        : 'concurrent',
+            'junit.jupiter.execution.parallel.mode.classes.default': 'concurrent',
 
-tasks.withType(Test) {
+            'selenide.browser'                                     : 'com.tests.utils.provider.SelenoidDriverProvider',
+            'selenide.timeout'                                     : '6000',
+    ]
+
+    systemProperties System.getProperties()
 
     beforeTest { descriptor ->
         logger.lifecycle("Running: " + descriptor)
@@ -64,3 +71,5 @@ allure {
 task wrapper(type: Wrapper) {
     gradleVersion = '5.5.1'
 }
+
+apply from: rootProject.file('gradle/tests.gradle')
